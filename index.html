@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventPass — Modern Digital Pass & Event Access Portal</title>
+    <meta name="description" content="Discover premier tech summits, creative masterclasses, and workshops. Generate verifiable digital passes with custom tiers, offline QR codes, and instant badge downloads.">
+    
+    <!-- Google Fonts: Plus Jakarta Sans & Outfit for luxury soft typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Application Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Ambient Soft Glow Background Blobs -->
+    <div class="ambient-glow" aria-hidden="true">
+        <div class="glow-orb glow-1"></div>
+        <div class="glow-orb glow-2"></div>
+        <div class="glow-orb glow-3"></div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="app-header">
+        <div class="nav-container">
+            <a href="#" class="brand-badge" aria-label="EventPass Home">
+                <div class="brand-icon-box">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="4" width="20" height="16" rx="3"></rect>
+                        <line x1="2" y1="10" x2="22" y2="10"></line>
+                        <circle cx="7" cy="15" r="1.5"></circle>
+                        <line x1="12" y1="15" x2="18" y2="15"></line>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="brand-title">EventPass</h2>
+                    <span class="brand-subtitle">Digital Pass & Access Hub</span>
+                </div>
+            </a>
+
+            <!-- Navigation Controls -->
+            <div class="nav-actions">
+                <nav class="tab-switcher" aria-label="Navigation Tabs">
+                    <button id="tab-explore" onclick="switchTab('explore')" class="tab-btn active">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+                        <span>Explore</span>
+                    </button>
+                    <button id="tab-tickets" onclick="switchTab('tickets')" class="tab-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path><path d="M13 5v2"></path><path d="M13 17v2"></path><path d="M13 11v2"></path></svg>
+                        <span>My Passes</span>
+                        <span id="ticket-count" class="tab-badge">0</span>
+                    </button>
+                </nav>
+
+                <button onclick="openCreateEventModal()" class="btn-create-event" title="Host and publish a new event">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <span>Host Event</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Application Container -->
+    <main class="main-content">
+
+        <!-- Hero Banner with Soft Pastel Styling & Real-Time Stats -->
+        <section class="hero-banner" aria-label="Portal Overview">
+            <span class="hero-pill">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"></circle></svg>
+                Autumn 2026 Season Now Open
+            </span>
+            <div>
+                <h1 class="hero-title">
+                    Discover Gatherings. <span class="gradient-text">Carry Your Digital Badge.</span>
+                </h1>
+                <p class="hero-desc">
+                    Register for leading tech summits, security masterclasses, and creative workshops. Get photorealistic digital lanyard passes equipped with instant offline QR access.
+                </p>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="stats-strip">
+                <div class="stat-item">
+                    <div class="stat-icon indigo">🎟️</div>
+                    <div class="stat-meta">
+                        <h4 id="stat-total-events">6</h4>
+                        <p>Available Events</p>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon emerald">💳</div>
+                    <div class="stat-meta">
+                        <h4 id="stat-my-passes">0</h4>
+                        <p>Claimed Passes</p>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon amber">⭐</div>
+                    <div class="stat-meta">
+                        <h4 id="stat-vip-passes">0</h4>
+                        <p>VIP Delegations</p>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon rose">⚡</div>
+                    <div class="stat-meta">
+                        <h4>100%</h4>
+                        <p>Static & Offline</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXPLORE SECTION -->
+        <section id="explore-view" aria-label="Explore Events">
+            
+            <!-- Search, Categories and Sort Bar -->
+            <div class="controls-bar">
+                <div class="search-and-sort">
+                    <div class="search-input-wrapper">
+                        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="search-input" class="search-input" placeholder="Search by title, location, or keyword..." aria-label="Search events">
+                        <button id="clear-search-btn" class="clear-search-btn" title="Clear search">✕</button>
+                    </div>
+
+                    <div class="filter-actions">
+                        <select id="sort-select" class="sort-select" aria-label="Sort events">
+                            <option value="upcoming">Sort: Upcoming First</option>
+                            <option value="popular">Sort: Most Popular</option>
+                            <option value="free">Sort: Free Entry First</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Category Filter Chips -->
+                <div class="category-chips" id="category-chips" role="radiogroup" aria-label="Event Categories">
+                    <button class="chip active" data-category="all" role="radio" aria-checked="true">✨ All Gatherings</button>
+                    <button class="chip" data-category="tech" role="radio" aria-checked="false">💻 AI & Tech</button>
+                    <button class="chip" data-category="security" role="radio" aria-checked="false">🛡️ Cybersecurity</button>
+                    <button class="chip" data-category="gaming" role="radio" aria-checked="false">🎮 Gaming & VFX</button>
+                    <button class="chip" data-category="design" role="radio" aria-checked="false">🎨 UX & Design</button>
+                    <button class="chip" data-category="business" role="radio" aria-checked="false">🌱 CleanTech & Biz</button>
+                </div>
+            </div>
+
+            <!-- Section Title & Grid -->
+            <div class="section-header">
+                <h2 class="section-title">Upcoming Sessions</h2>
+                <span id="events-count-badge" class="section-count">Loading events...</span>
+            </div>
+
+            <div id="event-grid" class="event-grid">
+                <!-- Injected via JavaScript -->
+            </div>
+        </section>
+
+        <!-- MY PASSES / TICKETS VIEW -->
+        <section id="tickets-view" class="hidden" aria-label="My Passes and Digital Tickets">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">Your Digital Passes & Badges</h2>
+                    <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.2rem;">
+                        Present these passes at venue checkpoints or download high-resolution copies for your wallet.
+                    </p>
+                </div>
+                <button onclick="switchTab('explore')" class="btn-secondary">
+                    + Register Another Pass
+                </button>
+            </div>
+
+            <div id="tickets-grid" class="tickets-grid">
+                <!-- Injected via JavaScript -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==========================================================================
+         MODALS & DIALOGS (Native HTML5 <dialog> with closedby="any" and aria labels)
+         ========================================================================== -->
+
+    <!-- RSVP / Customized Pass Registration Modal -->
+    <dialog id="rsvp-dialog" class="custom-dialog" closedby="any" aria-labelledby="rsvp-dialog-title">
+        <div class="dialog-card">
+            <div class="dialog-header">
+                <div>
+                    <span style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: var(--primary); letter-spacing: 0.05em;">Digital Pass Generation</span>
+                    <h3 id="rsvp-dialog-title">Claim Your Pass</h3>
+                </div>
+                <button onclick="closeModal('rsvp-dialog')" class="btn-close-dialog" aria-label="Close dialog">✕</button>
+            </div>
+
+            <form id="rsvp-form">
+                <div class="dialog-body">
+                    <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+                        Registering for: <strong id="rsvp-event-name" style="color: var(--text-main);">Event Name</strong>
+                    </p>
+
+                    <div class="form-group">
+                        <label class="form-label" for="attendee-name">User Name (Student / Attendee) *</label>
+                        <input type="text" id="attendee-name" class="form-input" placeholder="e.g. Enter User Name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="attendee-email">User Email Address *</label>
+                        <input type="email" id="attendee-email" class="form-input" placeholder="e.g. user@college.edu" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="attendee-org">College / University Name *</label>
+                        <input type="text" id="attendee-org" class="form-input" placeholder="e.g. Enter Your College / University" required>
+                    </div>
+
+                    <!-- Pass Tier Selector -->
+                    <div class="form-group">
+                        <label class="form-label">Select Pass Tier</label>
+                        <div class="tier-selector" id="tier-selector">
+                            <div class="tier-option selected" data-tier="Standard Pass">
+                                <div class="tier-name">Standard Pass</div>
+                                <div class="tier-price">Included (Free)</div>
+                            </div>
+                            <div class="tier-option" data-tier="VIP All-Access">
+                                <div class="tier-name">VIP All-Access</div>
+                                <div class="tier-price">Front Row & Lounge</div>
+                            </div>
+                            <div class="tier-option" data-tier="Student / Dev">
+                                <div class="tier-name">Student / Dev</div>
+                                <div class="tier-price">Workshop Perks</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Avatar Emoji Selection -->
+                    <div class="form-group">
+                        <label class="form-label">Badge Avatar Icon</label>
+                        <div class="avatar-options" id="avatar-options">
+                            <div class="avatar-choice selected" data-avatar="👤">👤</div>
+                            <div class="avatar-choice" data-avatar="🎓">🎓</div>
+                            <div class="avatar-choice" data-avatar="💻">💻</div>
+                            <div class="avatar-choice" data-avatar="🚀">🚀</div>
+                            <div class="avatar-choice" data-avatar="⚡">⚡</div>
+                            <div class="avatar-choice" data-avatar="🌟">🌟</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dialog-footer">
+                    <button type="button" onclick="closeModal('rsvp-dialog')" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary">Generate Pass Badge</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
+    <!-- Event Agenda & Details Modal -->
+    <dialog id="event-details-dialog" class="custom-dialog" closedby="any" aria-labelledby="details-dialog-title">
+        <div class="dialog-card">
+            <div class="dialog-header">
+                <h3 id="details-dialog-title">Session Details</h3>
+                <button onclick="closeModal('event-details-dialog')" class="btn-close-dialog" aria-label="Close dialog">✕</button>
+            </div>
+            <div class="dialog-body" id="event-details-body">
+                <!-- Dynamically populated via JS -->
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Create Custom Event Modal (Organizer Mode) -->
+    <dialog id="create-event-dialog" class="custom-dialog" closedby="any" aria-labelledby="create-dialog-title">
+        <div class="dialog-card">
+            <div class="dialog-header">
+                <div>
+                    <span style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: var(--primary); letter-spacing: 0.05em;">Organizer Workspace</span>
+                    <h3 id="create-dialog-title">Publish New Event</h3>
+                </div>
+                <button onclick="closeModal('create-event-dialog')" class="btn-close-dialog" aria-label="Close dialog">✕</button>
+            </div>
+
+            <form id="create-event-form">
+                <div class="dialog-body">
+                    <div class="form-group">
+                        <label class="form-label" for="new-event-title">Event Title *</label>
+                        <input type="text" id="new-event-title" class="form-input" placeholder="e.g. Next-Gen Web Architecture Summit" required>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                        <div class="form-group">
+                            <label class="form-label" for="new-event-category">Category *</label>
+                            <select id="new-event-category" class="form-select">
+                                <option value="Tech">Tech & AI</option>
+                                <option value="Security">Cybersecurity</option>
+                                <option value="Gaming">Gaming & 3D</option>
+                                <option value="Design">UX & Design</option>
+                                <option value="Business">CleanTech & Business</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="new-event-price">Ticket Price</label>
+                            <input type="text" id="new-event-price" class="form-input" placeholder="Free Pass or $20">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                        <div class="form-group">
+                            <label class="form-label" for="new-event-date">Date *</label>
+                            <input type="date" id="new-event-date" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="new-event-time">Time</label>
+                            <input type="text" id="new-event-time" class="form-input" placeholder="10:00 AM - 04:00 PM IST">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="new-event-location">Venue / Location *</label>
+                        <input type="text" id="new-event-location" class="form-input" placeholder="e.g. University Hall B or Virtual Stream" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="new-event-capacity">Total Capacity / Seats</label>
+                        <input type="number" id="new-event-capacity" class="form-input" placeholder="250" value="250" min="10" max="5000">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="new-event-desc">Event Summary & Agenda</label>
+                        <textarea id="new-event-desc" class="form-textarea" rows="3" placeholder="Provide a compelling description of what attendees will discover..."></textarea>
+                    </div>
+                </div>
+
+                <div class="dialog-footer">
+                    <button type="button" onclick="closeModal('create-event-dialog')" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary">Publish Gathering</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
+    <!-- Toast Notification Host -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+    <!-- Application Footer -->
+    <footer class="app-footer">
+        <div class="footer-content">
+            <div style="font-weight: 700; color: var(--text-main);">
+                EventPass Portal • Static Edition
+            </div>
+            <p>Designed with a warm, soft light aesthetic. Runs locally and completely offline with zero server dependencies.</p>
+            <div class="footer-links">
+                <a href="#explore-view" onclick="switchTab('explore')">Explore Events</a>
+                <a href="#tickets-view" onclick="switchTab('tickets')">My Wallet</a>
+                <a href="javascript:void(0)" onclick="openCreateEventModal()">Host Gathering</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Logic Script -->
+    <script src="app.js"></script>
+</body>
+</html>
